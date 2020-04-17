@@ -34,32 +34,40 @@ opposite = {'w':'e', 'e':'w', 'n':'s', 's':'n'}
 def explore_map(starting_room, checked=[]):
     path = []
     # For each exit direction recieved for the current room by the "get_exits" function in room.py
-    print(player.current_room)
+    print("\n--FUNCTION START --\nPlayer started here at the start of function: Room ID ->", player.current_room.id, player.current_room)
+    # For loop will explore every direction available to this room
     for direction in player.current_room.get_exits():
         # The player variable that was given will use the travel function within player.py
+        print("Player moved ", direction)
         player.travel(direction)
+        print("Player is now in room ", player.current_room.id)
 
         # If that new node/room is within the "checked" array
         if player.current_room.id in checked:
             # Then move in the opposite direction by referencing the dictionary key to get its value
             # print("opposite of north", opposite['n'])
             # print("opposite of west", opposite['w'])
+            print("This room checked, traveling back ", opposite[direction])
             player.travel(opposite[direction])
+            print("Player is now in room ", player.current_room.id)
         # Otherwise this is a new node/room
         else:
+            print("This room has not been checked, so it will be explored now: Room ID added ->", player.current_room.id)
             # Add this current room ID to the "checked" array
             checked.append(player.current_room.id)
             # Add the current direction to the "path" array to track movements
             path.append(direction)
             # And now that path equals the existing path plus the function
-            # print("1", path)
+            print("Path traveled to NEW rooms so far since function started", path)
             path = path + explore_map(player.current_room.id, checked)
             # print("2", path)
             # Now that the arrays have been updated -
             # Move the player to the opposite direction by referencing the dictionary key to get its value
+            print("Player traveled", opposite[direction])
             player.travel(opposite[direction])
             # Add that opposite path to the path tracking array since we traveled that direction
             path.append(opposite[direction])
+            print("PATH AFTER APPEND", path)
     return path
 
 # Set traversal_path to equal the output of the explore function to map out the rooms
