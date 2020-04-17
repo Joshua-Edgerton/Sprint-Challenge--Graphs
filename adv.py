@@ -28,7 +28,30 @@ player = Player(world.starting_room)
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
+opposite = {'w':'e', 'e':'w', 'n':'s', 's':'n'}
 
+def explore_map(starting_room, checked=[]):
+    path = []
+    print(player.current_room)
+    for direction in player.current_room.get_exits():
+        player.travel(direction)
+
+        if player.current_room.id in checked:
+            print("opposite of north", opposite['n'])
+            print("opposite of west", opposite['w'])
+            player.travel(opposite[direction])
+        else:
+            checked.append(player.current_room.id)
+            path.append(direction)
+            print("1", path)
+            path = path + explore_map(player.current_room.id, checked)
+            print("2", path)
+            player.travel(opposite[direction])
+            path.append(opposite[direction])
+    return path
+
+traversal_path = explore_map(player.current_room.id)
+print("Mapped path", traversal_path)
 
 
 # TRAVERSAL TEST
